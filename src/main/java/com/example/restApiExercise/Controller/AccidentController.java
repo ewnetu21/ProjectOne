@@ -1,0 +1,42 @@
+package com.example.restApiExercise.Controller;
+
+import com.example.restApiExercise.Model.Accident;
+import com.example.restApiExercise.dto.AccidentDto;
+import com.example.restApiExercise.repository.AccidentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+@RestController
+//@RequestMapping("/accidents")
+public class AccidentController {
+    @Autowired
+    AccidentRepository accidentRepo;
+    @GetMapping("/accidents") //GET
+    public List<Accident> getAccidents() {
+        return this.accidentRepo.findAll();
+    }
+    @PostMapping("/accidents") //SAVE
+    public void createAccident(@RequestBody AccidentDto accidentDto) {
+        Accident accident = new Accident();
+        accident.setId(accidentDto.getIdDto());
+        accident.setName(accidentDto.getNameDto());
+        accident.setAddress(accidentDto.getAddressDto());
+        accident.setVehicle(accidentDto.getVehicleDto());
+        this.accidentRepo.save(accident);
+    }
+    @GetMapping("/accidents/{id}") //GET BY ID
+    public Accident getOneAccident(@PathVariable int id) {
+        return this.accidentRepo.findById(id).orElse(null);
+    }
+    @DeleteMapping("/accidents/{id}") //DELETE
+    public void deleteAccident(@PathVariable int id) {
+         this.accidentRepo.deleteById(id);
+    }
+    @PutMapping("/accidents/{id}") //EDIT/PUT/UPDATE
+    public Accident updateAccident(@PathVariable int id, @RequestBody AccidentDto accidentDto) {
+        Accident accident = this.accidentRepo.findById(id).orElse(null);
+        accident.setName(accidentDto.getNameDto());
+        accident.setAddress(accidentDto.getAddressDto());
+        return this.accidentRepo.save(accident);
+    }
+}
