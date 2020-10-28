@@ -47,11 +47,5 @@ public class Motorist {
     public void setAge(int age) {
         this.age = age;
     }
- public Vehicle getVehicle() {
-        return vehicle;
-    }
 
-    public void setVehicle(Vehicle vehicle) {
-       this.vehicle = vehicle;
-    }
 }

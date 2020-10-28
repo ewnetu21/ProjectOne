@@ -4,35 +4,56 @@ import com.example.restApiExercise.Model.Motorist;
 import com.example.restApiExercise.Model.Vehicle;
 import com.example.restApiExercise.dto.MotoristDto;
 import com.example.restApiExercise.dto.VehicleDto;
+import com.example.restApiExercise.exception.MotoristNotFoundException;
+import com.example.restApiExercise.exception.VehicleNotFoundException;
 import com.example.restApiExercise.repository.MotoristRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 @RestController
 public class MotoristController {
    @Autowired
    MotoristRepository motoristRepository;
 
-@PostMapping("/motorists") //save to database
-public void createMotorist(@PathVariable int id, @RequestBody MotoristDto motoristDto){
-    // lets create user entity object //POST
-    Vehicle vehicle=new Vehicle();
-    Motorist motorist = new Motorist();
-    motorist.setLicence(motoristDto.getLicence());
-    motorist.setFirstname(motoristDto.getFirstname());
-    motorist.setLastname(motoristDto.getLastname());
-    motorist.setVehicle(vehicle);
-    motorist.setAge(motoristDto.getAge());
-    this.motoristRepository.save(motorist);
-}
-   @GetMapping("/motorists") //GET
+//@PostMapping("/motorists") //save to database
+//public void createMotorist(@PathVariable int id, @RequestBody MotoristDto motoristDto){
+//    // lets create user entity object //POST
+//    Vehicle vehicle=new Vehicle();
+//    Motorist motorist = new Motorist();
+//    motorist.setLicence(motoristDto.getLicence());
+//    motorist.setFirstname(motoristDto.getFirstname());
+//    motorist.setLastname(motoristDto.getLastname());
+//    motorist.setVehicle(vehicle);
+//    motorist.setAge(motoristDto.getAge());
+//    this.motoristRepository.save(motorist);
+//}
+
+    @PostMapping("/motorists") //POST/ SAVE
+    public ResponseEntity<Object> createMotorist(@RequestBody Motorist motorist){
+        Motorist createdMotorist=this.motoristRepository.save(motorist);// from 200 ok to created
+        URI location= ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("{/id}")
+                .buildAndExpand(createdMotorist.getLicence()).toUri();
+               // .buildAndExpand(createdMotorist.getId()).toUri();
+              return ResponseEntity.created(location).build(); // to 200 ok to created
+    }
+
+    @GetMapping("/motorists") //GET
    public List<Motorist> getMotorists(){
        return this.motoristRepository.findAll();
    }
+
     @GetMapping("/motorists/{licence}") //GET SINGLE
     public Motorist getOneMotorist(@PathVariable int licence){
-    return this.motoristRepository.findById(licence).orElse(null);
+        Motorist motorist= this.motoristRepository.findById(licence).orElseThrow(()->
+                new MotoristNotFoundException("No Motorist with licence:" + licence));
+        return motorist;
     }
     @DeleteMapping("/motorists") // DELETE
     public void deleteMotorist(@PathVariable int licence){

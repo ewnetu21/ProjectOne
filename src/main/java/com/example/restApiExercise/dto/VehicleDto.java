@@ -10,16 +10,12 @@ public class VehicleDto {
     private String model;
     private String make;
     private String color;
- private Accident accidentDto;
+ //private Accident accidentDto;
  private Set<Motorist> motoristDto;
 
-    public Accident getAccidentDto() {
-        return accidentDto;
-    }
+  //  public Accident getAccidentDto() {        return accidentDto;    }
 
-    public Set<Motorist> getMotoristDto() {
-        return motoristDto;
-    }
+   // public Set<Motorist> getMotoristDto() {        return motoristDto;    }
 
     public int getId() {
         return id;

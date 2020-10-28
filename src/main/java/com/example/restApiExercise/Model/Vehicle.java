@@ -1,6 +1,7 @@
 package com.example.restApiExercise.Model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Set;
 
@@ -9,6 +10,7 @@ public class Vehicle {
     @Id
     @GeneratedValue
     private int id;
+    @Size(min=3)
     private String model;
     private String make;
     private String color;

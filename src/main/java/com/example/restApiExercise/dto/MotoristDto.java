@@ -7,7 +7,7 @@ public class MotoristDto {
     private String firstname;
     private String lastname;
     private int age;
-    private Vehicle vehicleDto;
+    //private Vehicle vehicleDto;
 
     public int getLicence() {
         return licence;
@@ -17,9 +17,9 @@ public class MotoristDto {
         return firstname;
     }
 
-    public Vehicle getVehicleDto() {
-        return vehicleDto;
-    }
+    //public Vehicle getVehicleDto() {
+        //return vehicleDto;
+    //}
 
     public String getLastname() {
         return lastname;
