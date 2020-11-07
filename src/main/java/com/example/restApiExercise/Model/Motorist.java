@@ -1,13 +1,20 @@
 package com.example.restApiExercise.Model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.Size;
+import java.util.Date;
 
 @Entity
 //@Table(name = "motorist")
-public class Motorist {
+
+public class Motorist extends AuditModel<Date>{
     @Id
     @GeneratedValue
     private int licence;
+    @Size(min=3)
     private String firstname;
     private String lastname;
     private int age;

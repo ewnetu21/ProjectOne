@@ -7,6 +7,7 @@ import com.example.restApiExercise.dto.VehicleDto;
 //import com.example.restApiExercise.exception.VehicleNotFoundException;
 import com.example.restApiExercise.exception.VehicleNotFoundException;
 import com.example.restApiExercise.repository.VehicleRepository;
+import com.example.restApiExercise.services.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,19 +20,21 @@ import java.util.List;
 @RestController
 public class VehicleController {
     @Autowired
-    VehicleRepository vehicleRepository;
+
+    VehicleService vehicleService;
+   // VehicleRepository vehicleRepository;
     @PostMapping("/vehicles") //POST/ SAVE
     public ResponseEntity<Object> createVehicle(@Valid @RequestBody Vehicle vehicle){
        // public ResponseEntity<Object> createVehicle(@RequestBody VehicleDto vehicleDto){ //@PathVariable int id, for validation instead of DTO we will use class
-     //no DTo is needed here to post the vehicle into the database
-     //  Accident accident=new Accident();
-//        Vehicle vehicle = new Vehicle();
-//        vehicle.setId(vehicleDto.getId());
-//        vehicle.setModel(vehicleDto.getModel());
-//        vehicle.setMake(vehicleDto.getMake());
-//        vehicle.setColor(vehicleDto.getColor());
+       //no DTo is needed here to post the vehicle into the database
+       // Accident accident=new Accident();
+       // Vehicle vehicle = new Vehicle();
+       // vehicle.setId(vehicleDto.getId());
+       // vehicle.setModel(vehicleDto.getModel());
+       // vehicle.setMake(vehicleDto.getMake());
+       // vehicle.setColor(vehicleDto.getColor());
        // vehicle.setAccident(accident);
-        Vehicle createdVehicle=this.vehicleRepository.save(vehicle);// from 200 ok to created
+        Vehicle createdVehicle=this.vehicleService.createVehicle(vehicle);// from 200 ok to created
         URI location= ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("{/id}")
@@ -41,7 +44,7 @@ public class VehicleController {
 
     @GetMapping("/vehicles")   //GET ALL
     public List<Vehicle> getVehicles(){
-        return this.vehicleRepository.findAll();
+        return this.vehicleService.getVehicle();
             }
 //    @GetMapping("/vehicles/{id}")   //GET BY ID with 200 ok
 //    public Vehicle getOneVehicle(@PathVariable int id){
@@ -50,22 +53,21 @@ public class VehicleController {
 
     @GetMapping("/vehicles/{id}")   //GET BY ID
     public Vehicle getOneVehicle(@PathVariable int id){
-       Vehicle vehicle= this.vehicleRepository.findById(id).orElseThrow(()->
-        new VehicleNotFoundException("No vehicle with  id:" + id));
+       Vehicle vehicle= this.vehicleService.getOneVehicle(id);
         return vehicle;
     }
 
     @DeleteMapping("/vehicles/{id}")  //DELETE
     public void deleteVehicle(@PathVariable int id){
-        this.vehicleRepository.deleteById(id);
+        this.vehicleService.deleteVehicle(id);
     }
     @PutMapping("/vehicles/{id}") //EDIT/PUT/UPDATE
-    public Vehicle updateVehicle(@PathVariable int id, @RequestBody VehicleDto vehicleDto) {
-        Vehicle vehicle = this.vehicleRepository.findById(id).orElse(null);
+    public Vehicle updateVehicle(@PathVariable int id, @RequestBody Vehicle vehicleDto) {
+        Vehicle vehicle = this.vehicleService.getOneVehicle(id);
         vehicle.setModel(vehicleDto.getModel());
         vehicle.setMake(vehicleDto.getMake());
         vehicle.setColor(vehicleDto.getColor());
-        return this.vehicleRepository.save(vehicle);
+        return this.vehicleService.updateVehicle(id,vehicle);
     }
     }
 

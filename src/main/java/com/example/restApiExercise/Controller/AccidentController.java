@@ -5,6 +5,7 @@ import com.example.restApiExercise.Model.Motorist;
 import com.example.restApiExercise.dto.AccidentDto;
 import com.example.restApiExercise.exception.AccidentNotFoundException;
 import com.example.restApiExercise.repository.AccidentRepository;
+import com.example.restApiExercise.services.AccidentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +17,11 @@ import java.util.List;
 //@RequestMapping("/accidents")
 public class AccidentController {
     @Autowired
-    AccidentRepository accidentRepo;
+    //AccidentRepository accidentRepo;
+    AccidentService accidentService;
     @GetMapping("/accidents") //GET
     public List<Accident> getAccidents() {
-        return this.accidentRepo.findAll();
+        return this.accidentService.getAccident();
     }
     @PostMapping("/accidents") //SAVE
     public ResponseEntity<Object> createAccident(@RequestBody AccidentDto accidentDto) {
@@ -28,9 +30,9 @@ public class AccidentController {
         accident.setName(accidentDto.getNameDto());
         accident.setAddress(accidentDto.getAddressDto());
         accident.setVehicle(accidentDto.getVehicleDto());
-        this.accidentRepo.save(accident);
+        this.accidentService.createAccident(accident);
 //For 201 Created
-        Accident createdAccident=this.accidentRepo.save(accident);
+        Accident createdAccident=this.accidentService.createAccident(accident);
         URI location= ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("{/id}")
@@ -40,19 +42,22 @@ public class AccidentController {
 
     @GetMapping("/accidents/{id}") //GET BY ID
     public Accident getOneAccident(@PathVariable int id) {
-        Accident accident= this.accidentRepo.findById(id).orElseThrow(()->
-        new AccidentNotFoundException("No accident with id :"+ id));
+//        Accident accident= this.accidentRepo.findById(id).orElseThrow(()->
+//        new AccidentNotFoundException("No accident with id :"+ id));
+//        return accident;
+
+        Accident accident= this.accidentService.getOneAccident(id);
         return accident;
     }
     @DeleteMapping("/accidents/{id}") //DELETE
     public void deleteAccident(@PathVariable int id) {
-         this.accidentRepo.deleteById(id);
+         this.accidentService.deleteAccident(id);
     }
     @PutMapping("/accidents/{id}") //EDIT/PUT/UPDATE
     public Accident updateAccident(@PathVariable int id, @RequestBody AccidentDto accidentDto) {
-        Accident accident = this.accidentRepo.findById(id).orElse(null);
+        Accident accident = this.accidentService.getOneAccident(id);
         accident.setName(accidentDto.getNameDto());
         accident.setAddress(accidentDto.getAddressDto());
-        return this.accidentRepo.save(accident);
+        return this.accidentService.updateAccident(id,accident);
     }
 }

@@ -1,10 +1,10 @@
 package com.example.restApiExercise.Model;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Date;
 import java.util.Set;
 @Entity
-public class Accident {
+public class Accident extends AuditModel<Date>{
     @Id
     @GeneratedValue
     private int id;

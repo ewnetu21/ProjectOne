@@ -2,11 +2,12 @@ package com.example.restApiExercise.Model;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.List;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
-public class Vehicle {
+
+public class Vehicle extends AuditModel<Date>{
     @Id
     @GeneratedValue
     private int id;
